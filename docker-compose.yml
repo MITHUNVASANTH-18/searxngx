@@ -1,0 +1,37 @@
+services:
+
+  searxng:
+    image: docker.io/searxng/searxng:latest
+    volumes:
+      - ./searxng:/etc/searxng:rw
+    ports:
+      - "6733:6733"
+    networks:
+      - searchengine-network
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      - SEARXNG_URL=http://searxng:6733
+    ports:
+      - "6743:6743"
+    networks:
+      - searchengine-network
+    depends_on:
+      - searxng
+    restart: unless-stopped
+
+  frontend:
+    build: ./searxngx
+    ports:
+      - "6753:6753"
+    networks:
+      - searchengine-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  searchengine-network:
+    driver: bridge
