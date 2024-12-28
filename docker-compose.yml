@@ -25,7 +25,7 @@ services:
   frontend:
     build: ./searxngx
     ports:
-      - "6753:6753"
+      - "6783:6783"
     networks:
       - searchengine-network
     depends_on:
